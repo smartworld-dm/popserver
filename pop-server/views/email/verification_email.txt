@@ -1,0 +1,8 @@
+Hi {{username}},
+
+Thanks for signing up for {{appName}}!
+Please confirm your account by clicking on the link below.
+
+{{link}}
+
+{{appName}} Team.

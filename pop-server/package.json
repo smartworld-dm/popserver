@@ -1,0 +1,27 @@
+{
+  "name": "pop-server",
+  "version": "1.4.0",
+  "description": "An example Parse API server using the pop-server module",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/Ant-Tech-Devs/popapp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bitly": "^4.1.1",
+    "express": "~4.11.x",
+    "kerberos": "~0.0.x",
+    "parse": "~1.8.0",
+    "parse-server": "*",
+    "parse-server-genericemail-adapter": "0.0.3",
+    "parse-server-mailgun": "2.1.15",
+    "stripe": "^4.19.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=4.3"
+  }
+}

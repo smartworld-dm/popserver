@@ -1,0 +1,5 @@
+Hi {{username}},
+
+Thanks for using {{appName}}.
+
+{{appName}} Team.
