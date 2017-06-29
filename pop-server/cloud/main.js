@@ -1,8 +1,10 @@
-// const stripeTestSecretKey = "sk_test_7W4PxkFfDCvbcRqRLRipss39";
-// const stripeTestPublicKey = "pk_test_zUUsFqn6eVqbCISVHMG9d7hY";
+'use strict'
+
+const stripeTestSecretKey = "sk_test_P97UxMQ2bXfzto8tkoKbh6Hq";
+const stripeTestPublicKey = "pk_test_j0DRrC8XFPCeFW36VQ6NFgDS";
 // const Bitly = require('bitly');
 
-// const stripe = require("stripe")(stripeTestSecretKey);
+const stripe = require("stripe")(stripeTestSecretKey);
 // const bitly = new Bitly('752ea5696163f4d88160bc4a008166d60183d9ef');
 
 // const httpProtocol = 'http://';
@@ -10,6 +12,44 @@
 
 Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
+});
+
+Parse.Cloud.beforeSave("Category", function(req, res) {
+	
+	const newCategory = req.object;
+
+	var Category = Parse.Object.extend("Category");
+	var catQuery = new Parse.Query(Category);
+
+	catQuery.get(newCategory.id, {
+	  success: function(curCat) {
+	    // The object was retrieved successfully.
+	    let curCountUser = curCat.get('countUser');
+		
+		const action = newCategory.get('action');
+
+		switch (action) {
+			case 'ADD_USER':
+				newCategory.set("countUser", (curCountUser ? curCountUser : 0) + 1);
+				break;
+			case 'REMOVE_USER':
+				newCategory.set("countUser", (curCountUser ? curCountUser : 0) - 1);
+				break;
+			default:
+				break;
+		}
+
+		newCategory.unset("action");
+
+		res.success();
+	  },
+	  error: function(object, error) {
+	    // The object was not retrieved successfully.
+	    // error is a Parse.Error with an error code and message.
+	  	response.error(error);
+	  }
+	});
+
 });
 
 // Parse.Cloud.define("stripeCharge", function(request, response) {
