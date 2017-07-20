@@ -11,11 +11,13 @@
   "dependencies": {
     "bitly": "^4.1.1",
     "express": "~4.11.x",
+    "jimp": "^0.2.28",
     "kerberos": "~0.0.x",
     "parse": "~1.8.0",
     "parse-server": "*",
     "parse-server-genericemail-adapter": "0.0.3",
     "parse-server-mailgun": "2.1.15",
+    "request": "^2.81.0",
     "stripe": "^4.19.0"
   },
   "scripts": {

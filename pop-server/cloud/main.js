@@ -5,6 +5,10 @@ const stripeTestPublicKey = "pk_test_j0DRrC8XFPCeFW36VQ6NFgDS";
 // const Bitly = require('bitly');
 
 const stripe = require("stripe")(stripeTestSecretKey);
+var request = require('request').defaults({ encoding: null });
+var Jimp = require("jimp");
+var fs = require("fs");
+
 // const bitly = new Bitly('752ea5696163f4d88160bc4a008166d60183d9ef');
 
 // const httpProtocol = 'http://';
@@ -12,6 +16,55 @@ const stripe = require("stripe")(stripeTestSecretKey);
 
 Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
+});
+
+Parse.Cloud.define("createPhoto", function(req, res) {
+	if(!req.params.user) {
+		res.error("Missing params: user");
+		return;
+	}
+	if(!req.params.date) {
+		res.error("Missing params: date");
+		return;
+	}
+	if(!req.params.image) {
+		res.error("Missing params: image");
+		return;
+	}
+  	Jimp.read(req.params.image._url, function (err, image) {
+		if(err) {
+			res.error(err);
+		} else {
+			image.resize(1024, Jimp.AUTO); 
+			image.getBase64(Jimp.AUTO, (err, base64) => {
+				if (err) {
+					res.error(err);
+				} else {
+					var Photo = Parse.Object.extend("Photos");
+					var photo = new Photo();
+					photo.set('isArtwork', true);
+					photo.set('user', req.params.user);
+					photo.set('image', req.params.image);
+					photo.set('date', req.params.date);
+					var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
+					parseFile.save().then(function(dataFile) {
+						photo.set('thumbnail', dataFile);
+						photo.save(null, {
+							success: function(photoResult) {
+								res.success(photoResult);
+							},
+							error: function(photoResult, error) {
+								res.error(error);
+							}
+						});
+					}, function(error) {
+						res.error(error);
+					});
+					
+				}
+			});
+		}
+	});
 });
 
 Parse.Cloud.beforeSave("Category", function(req, res) {
