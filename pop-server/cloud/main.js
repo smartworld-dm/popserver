@@ -42,9 +42,9 @@ Parse.Cloud.define("createPhoto", function(req, res) {
 								var Photo = Parse.Object.extend("Photos");
 								var photo = new Photo();
 								photo.set('isArtwork', false);
-								photo.set('user', req.params.user);
-								photo.set('image', req.params.image);
-								photo.set('date', req.params.date);
+								photo.set('user', listPhotos[i].user);
+								photo.set('image', listPhotos[i].image);
+								photo.set('date', listPhotos[i].date);
 								var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
 								parseFile.save().then(function(dataFile) {
 									photo.set('thumbnail', dataFile);
