@@ -19,52 +19,64 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 Parse.Cloud.define("createPhoto", function(req, res) {
-	if(!req.params.user) {
-		res.error("Missing params: user");
+	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
+		res.error("Missing params or wrong format: arrPhotos");
 		return;
 	}
-	if(!req.params.date) {
-		res.error("Missing params: date");
-		return;
-	}
-	if(!req.params.image) {
-		res.error("Missing params: image");
-		return;
-	}
-  	Jimp.read(req.params.image._url, function (err, image) {
-		if(err) {
-			res.error(err);
-		} else {
-			image.resize(1024, Jimp.AUTO); 
-			image.getBase64(Jimp.AUTO, (err, base64) => {
-				if (err) {
-					res.error(err);
-				} else {
-					var Photo = Parse.Object.extend("Photos");
-					var photo = new Photo();
-					photo.set('isArtwork', true);
-					photo.set('user', req.params.user);
-					photo.set('image', req.params.image);
-					photo.set('date', req.params.date);
-					var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
-					parseFile.save().then(function(dataFile) {
-						photo.set('thumbnail', dataFile);
-						photo.save(null, {
-							success: function(photoResult) {
-								res.success(photoResult);
-							},
-							error: function(photoResult, error) {
-								res.error(error);
+	var responseAll = [];
+	var listPhotos = req.params.arrPhotos;
+	function photo_repeater(i) {
+		if(i < listPhotos.length) {
+			if(listPhotos[i].image && listPhotos[i].image._url && listPhotos[i].user && listPhotos[i].date) {
+				Jimp.read(listPhotos[i].image._url, function (err, image) {
+					if(err) {
+						responseAll.push(err);
+						photo_repeater(i + 1);
+					} else {
+						image.resize(1024, Jimp.AUTO); 
+						image.getBase64(Jimp.AUTO, (err, base64) => {
+							if (err) {
+								responseAll.push(err);
+								photo_repeater(i + 1);
+							} else {
+								var Photo = Parse.Object.extend("Photos");
+								var photo = new Photo();
+								photo.set('isArtwork', false);
+								photo.set('user', req.params.user);
+								photo.set('image', req.params.image);
+								photo.set('date', req.params.date);
+								var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
+								parseFile.save().then(function(dataFile) {
+									photo.set('thumbnail', dataFile);
+									photo.save(null, {
+										success: function(photoResult) {
+											responseAll.push(photoResult);
+											photo_repeater(i + 1);
+										},
+										error: function(photoResult, error) {
+											responseAll.push(error);
+											photo_repeater(i + 1);
+										}
+									});
+								}, function(error) {
+									rresponseAll.push(error);
+									photo_repeater(i + 1);
+								});
+								
 							}
 						});
-					}, function(error) {
-						res.error(error);
-					});
-					
-				}
-			});
+					}
+				});
+			} else {
+				responseAll.push({code: 404, message: 'Missing params: image, user, date'});
+				photo_repeater(i + 1);
+			}
+			
+		} else {
+			res.success(responseAll);
 		}
-	});
+	}
+	photo_repeater(0);
 });
 
 Parse.Cloud.beforeSave("Category", function(req, res) {
