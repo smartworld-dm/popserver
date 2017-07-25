@@ -188,48 +188,60 @@ Parse.Cloud.beforeSave("Category", function(req, res) {
 
 });
 
-// Parse.Cloud.define("stripeCharge", function(request, response) {
-//   if (!request.user) {
-//     response.error("Must be signed in to call this Cloud Function.")
-//     return;
-//   }
+Parse.Cloud.define("stripeCharge", function(request, response) {
+  if (!request.user) {
+    response.error("Must be signed in to call this Cloud Function.")
+    return;
+  }
 
-//   // Check params
-//   if (!request.params.stripeCustomer) {
-//     response.error("Missing objectId");
-//     return;
-//   }
+  // Check params
+  // if (!request.params.stripeCustomer) {
+  //   response.error("Missing objectId");
+  //   return;
+  // }
 
-//   if(!request.params.amount) {
-//     response.error("Missing amount");
-//     return;
-//   }
+  if(!request.params.token) {
+    response.error("Missing 'token'");
+    return;
+  }
 
-//   if(!request.params.address) {
-//     response.error("Missing address");
-//     return;
-//   }
+  if(!request.params.amount) {
+    response.error("Missing 'amount'");
+    return;
+  }
 
-//   // Charge the user's card:
-//   var charge = stripe.charges.create({
-//     amount: request.params.amount * 100,
-//     currency: "eur",
-//     description: "Payment from user #" + request.user.id,
-//     metadata: {
-//       address: request.params.address
-//     },
-//     capture: true,
-//     customer: request.params.stripeCustomer,
-//   }, function(err, charge) {
-//     // asynchronously called
-//     if (!err) {
-//       response.success(charge);
-//     } else {
-//       response.error(err);
-//     }
-//   });
+  // if(!request.params.address) {
+  //   response.error("Missing 'address'");
+  //   return;
+  // }
+  
+  if(!request.params.detail) {
+    response.error("Missing 'detail'");
+    return;
+  }
 
-// });
+  // Charge the user's card:
+  var charge = stripe.charges.create({
+    amount: request.params.amount * 100,
+    currency: "aud",
+    description: "Payment from user #" + request.user.id,
+    metadata: {
+      // address: request.params.address,
+      detail: request.params.detail
+    },
+    capture: true,
+    source: request.params.token
+    // customer: request.params.stripeCustomer,
+  }, function(err, charge) {
+    // asynchronously called
+    if (!err) {
+      response.success(charge);
+    } else {
+      response.error(err);
+    }
+  });
+
+});
 
 // Parse.Cloud.define("stripeCreateCustomer", function(request, response){
 //   if (!request.user) {
