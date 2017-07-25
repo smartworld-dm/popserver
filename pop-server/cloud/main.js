@@ -23,6 +23,7 @@ Parse.Cloud.define("createPhoto", function(req, res) {
 		res.error("Missing params or wrong format: arrPhotos");
 		return;
 	}
+console.log(req.params.arrPhotos)
 	var responseAll = [];
 	var listPhotos = req.params.arrPhotos;
 	function photo_repeater(i) {
@@ -33,7 +34,8 @@ Parse.Cloud.define("createPhoto", function(req, res) {
 						responseAll.push(err);
 						photo_repeater(i + 1);
 					} else {
-						image.resize(1024, Jimp.AUTO); 
+						image.resize(640, Jimp.AUTO)
+							.quality(60); 
 						image.getBase64(Jimp.AUTO, (err, base64) => {
 							if (err) {
 								responseAll.push(err);
