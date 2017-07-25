@@ -18,6 +18,77 @@ Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
 
+Parse.Cloud.job("resizePhoto", function(req, res) {
+ 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
+		res.error("Missing params or wrong format: arrPhotos");
+		return;
+	}
+	var responseAll = [];
+	var listPhotos = req.params.arrPhotos;
+	function photo_repeater(i) {
+		if(i < listPhotos.length) {
+			if(listPhotos[i].image && listPhotos[i].image._url && listPhotos[i].objectId) {
+				var query = new Parse.Query("Photos")
+				query.get(listPhotos[i].objectId, {
+					success: function(photo) {
+						if(photo) {
+							Jimp.read(photo.get('image')._url, function (err, image) {
+								if(err) {
+									responseAll.push(err);
+									photo_repeater(i + 1);
+								} else {
+									image.resize(1024, Jimp.AUTO); 
+									image.getBase64(Jimp.AUTO, (err, base64) => {
+										if (err) {
+											responseAll.push(err);
+											photo_repeater(i + 1);
+										} else {
+											var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
+											parseFile.save().then(function(dataFile) {
+												photo.set('thumbnail', dataFile);
+												photo.save(null, {
+													success: function(photoResult) {
+														responseAll.push(photoResult);
+														photo_repeater(i + 1);
+													},
+													error: function(photoResult, error) {
+														responseAll.push(error);
+														photo_repeater(i + 1);
+													}
+												});
+											}, function(error) {
+												rresponseAll.push(error);
+												photo_repeater(i + 1);
+											});
+											
+										}
+									});
+								}
+							});
+						} else {
+							responseAll.push({code: 404, message: 'Object not found'});
+							photo_repeater(i + 1);
+						}
+						
+					},
+					error: function(object, error) {
+						responseAll.push(error);
+						photo_repeater(i + 1);
+					}
+				});
+			} else {
+				responseAll.push({code: 404, message: 'Missing params: image, objectId'});
+				photo_repeater(i + 1);
+			}
+			
+		} else {
+			res.success(responseAll);
+		}
+	}
+	photo_repeater(0);
+});
+
+
 Parse.Cloud.define("createPhoto", function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
 		res.error("Missing params or wrong format: arrPhotos");
@@ -119,48 +190,60 @@ Parse.Cloud.beforeSave("Category", function(req, res) {
 
 });
 
-// Parse.Cloud.define("stripeCharge", function(request, response) {
-//   if (!request.user) {
-//     response.error("Must be signed in to call this Cloud Function.")
-//     return;
-//   }
+Parse.Cloud.define("stripeCharge", function(request, response) {
+  if (!request.user) {
+    response.error("Must be signed in to call this Cloud Function.")
+    return;
+  }
 
-//   // Check params
-//   if (!request.params.stripeCustomer) {
-//     response.error("Missing objectId");
-//     return;
-//   }
+  // Check params
+  // if (!request.params.stripeCustomer) {
+  //   response.error("Missing objectId");
+  //   return;
+  // }
 
-//   if(!request.params.amount) {
-//     response.error("Missing amount");
-//     return;
-//   }
+  if(!request.params.token) {
+    response.error("Missing 'token'");
+    return;
+  }
 
-//   if(!request.params.address) {
-//     response.error("Missing address");
-//     return;
-//   }
+  if(!request.params.amount) {
+    response.error("Missing 'amount'");
+    return;
+  }
 
-//   // Charge the user's card:
-//   var charge = stripe.charges.create({
-//     amount: request.params.amount * 100,
-//     currency: "eur",
-//     description: "Payment from user #" + request.user.id,
-//     metadata: {
-//       address: request.params.address
-//     },
-//     capture: true,
-//     customer: request.params.stripeCustomer,
-//   }, function(err, charge) {
-//     // asynchronously called
-//     if (!err) {
-//       response.success(charge);
-//     } else {
-//       response.error(err);
-//     }
-//   });
+  // if(!request.params.address) {
+  //   response.error("Missing 'address'");
+  //   return;
+  // }
+  
+  if(!request.params.detail) {
+    response.error("Missing 'detail'");
+    return;
+  }
 
-// });
+  // Charge the user's card:
+  var charge = stripe.charges.create({
+    amount: request.params.amount * 100,
+    currency: "aud",
+    description: "Payment from user #" + request.user.id,
+    metadata: {
+      // address: request.params.address,
+      detail: request.params.detail
+    },
+    capture: true,
+    source: request.params.token
+    // customer: request.params.stripeCustomer,
+  }, function(err, charge) {
+    // asynchronously called
+    if (!err) {
+      response.success(charge);
+    } else {
+      response.error(err);
+    }
+  });
+
+});
 
 // Parse.Cloud.define("stripeCreateCustomer", function(request, response){
 //   if (!request.user) {
