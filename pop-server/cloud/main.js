@@ -162,29 +162,32 @@ Parse.Cloud.beforeSave("Category", function(req, res) {
 	catQuery.get(newCategory.id, {
 	  success: function(curCat) {
 	    // The object was retrieved successfully.
-	    let curCountUser = curCat.get('countUser');
+		  let curCountUser = curCat.get('countUser');
 		
-		const action = newCategory.get('action');
+			const action = newCategory.get('action');
 
-		switch (action) {
-			case 'ADD_USER':
-				newCategory.set("countUser", (curCountUser ? curCountUser : 0) + 1);
-				break;
-			case 'REMOVE_USER':
-				newCategory.set("countUser", (curCountUser ? curCountUser : 0) - 1);
-				break;
-			default:
-				break;
-		}
+			switch (action) {
+				case 'ADD_USER':
+					newCategory.set("countUser", (curCountUser ? curCountUser : 0) + 1);
+					break;
+				case 'REMOVE_USER':
+					newCategory.set("countUser", (curCountUser ? curCountUser : 0) - 1);
+					break;
+				default:
+					break;
+			}
 
-		newCategory.unset("action");
+			newCategory.unset("action");
 
-		res.success();
+			res.success();
 	  },
 	  error: function(object, error) {
 	    // The object was not retrieved successfully.
 	    // error is a Parse.Error with an error code and message.
-	  	response.error(error);
+		  newCategory.set("countUser", 0);
+		  newCategory.unset("action");
+
+		  res.success();
 	  }
 	});
 
