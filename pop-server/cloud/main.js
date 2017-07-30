@@ -37,7 +37,7 @@ Parse.Cloud.job("resizePhoto", function(req, res) {
 									responseAll.push(err);
 									photo_repeater(i + 1);
 								} else {
-									image.resize(1024, Jimp.AUTO); 
+									image.resize(640, Jimp.AUTO).quality(60);
 									image.getBase64(Jimp.AUTO, (err, base64) => {
 										if (err) {
 											responseAll.push(err);
@@ -87,7 +87,6 @@ Parse.Cloud.job("resizePhoto", function(req, res) {
 	}
 	photo_repeater(0);
 });
-
 
 Parse.Cloud.define("createPhoto", function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
@@ -200,11 +199,6 @@ Parse.Cloud.define("stripeCharge", function(request, response) {
   }
 
   // Check params
-  // if (!request.params.stripeCustomer) {
-  //   response.error("Missing objectId");
-  //   return;
-  // }
-
   if(!request.params.token) {
     response.error("Missing 'token'");
     return;
@@ -215,15 +209,14 @@ Parse.Cloud.define("stripeCharge", function(request, response) {
     return;
   }
 
-  // if(!request.params.address) {
-  //   response.error("Missing 'address'");
-  //   return;
-  // }
-  
   if(!request.params.detail) {
     response.error("Missing 'detail'");
     return;
   }
+	if (!request.params.detail.journalId) {
+		response.error("Missing journalId");
+		return;
+	}
 
   // Charge the user's card:
   var charge = stripe.charges.create({
@@ -236,11 +229,25 @@ Parse.Cloud.define("stripeCharge", function(request, response) {
     // customer: request.params.stripeCustomer,
   }, function(err, charge) {
     // asynchronously called
-    if (!err) {
-      response.success(charge);
-    } else {
-      response.error(err);
-    }
+	  if (!err) {
+	  	const journalId = request.params.detail.journalId
+
+		  const journalQuery = new Parse.Query('Journal')
+
+		  journalQuery.equalTo('objectId', journalId)
+		  journalQuery.first()
+			  .then(function (journal) {
+				  journal.set('status', 'COMPLETED')
+				  journal.save()
+
+				  response.success(charge)
+			  })
+			  .catch(function () {
+				  response.error('journal lookup failed')
+			  })
+	  } else {
+		  response.error(err)
+	  }
   });
 
 });
