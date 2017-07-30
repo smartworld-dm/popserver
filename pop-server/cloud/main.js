@@ -227,10 +227,7 @@ Parse.Cloud.define("stripeCharge", function(request, response) {
     amount: request.params.amount * 100,
     currency: "aud",
     description: "Payment from user #" + request.user.id,
-    metadata: {
-      // address: request.params.address,
-      detail: request.params.detail
-    },
+    metadata: request.params.detail,
     capture: true,
     source: request.params.token
     // customer: request.params.stripeCustomer,
