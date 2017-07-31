@@ -27,7 +27,7 @@ Parse.Cloud.job("resizePhoto", function(req, res) {
 	var listPhotos = req.params.arrPhotos;
 	function photo_repeater(i) {
 		if(i < listPhotos.length) {
-			if(listPhotos[i].image && listPhotos[i].image._url && listPhotos[i].objectId) {
+			if(listPhotos[i].objectId) {
 				var query = new Parse.Query("Photos")
 				query.get(listPhotos[i].objectId, {
 					success: function(photo) {
