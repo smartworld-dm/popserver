@@ -18,6 +18,33 @@ Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
 
+Parse.Cloud.define('getListPhoto', function(req, res) {
+	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
+		res.error("Missing params or wrong format: arrPhotos");
+		return;
+	}
+	const responseAll = [];
+	const listPhotos = req.params.arrPhotos;
+	function photo_repeater(i) {
+		if(i < listPhotos.length) {
+			var query = new Parse.Query("Photos");
+			query.get(listPhotos[i], function(photo) {
+				if(photo) {
+					responseAll.push(photo);
+					photo_repeater(i + 1);
+				} else {
+					photo_repeater(i + 1);
+				}
+			}, function(error) {
+				photo_repeater(i + 1);
+			})
+		} else {
+			res.success(responseAll);
+		}
+	}
+	photo_repeater(0);
+})
+
 Parse.Cloud.job("resizePhoto", function(req, res) {
  	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
 		res.error("Missing params or wrong format: arrPhotos");
