@@ -1,10 +1,7 @@
 'use strict'
 
-const stripeTestSecretKey = "sk_test_P97UxMQ2bXfzto8tkoKbh6Hq";
-const stripeTestPublicKey = "pk_test_j0DRrC8XFPCeFW36VQ6NFgDS";
-// const Bitly = require('bitly');
+const stripe = require('./StripeFunctions')
 
-const stripe = require("stripe")(stripeTestSecretKey);
 var request = require('request').defaults({ encoding: null });
 var Jimp = require("jimp");
 var fs = require("fs");
@@ -17,6 +14,9 @@ var fs = require("fs");
 Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
+
+// Stripe functions
+Parse.Cloud.define("stripeCharge", stripe.stripeCharge)
 
 Parse.Cloud.define('getListPhoto', function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
@@ -218,127 +218,3 @@ Parse.Cloud.beforeSave("Category", function(req, res) {
 	});
 
 });
-
-Parse.Cloud.define("stripeCharge", function(request, response) {
-  if (!request.user) {
-    response.error("Must be signed in to call this Cloud Function.")
-    return;
-  }
-
-  // Check params
-  if(!request.params.token) {
-    response.error("Missing 'token'");
-    return;
-  }
-
-  if(!request.params.amount) {
-    response.error("Missing 'amount'");
-    return;
-  }
-
-  if(!request.params.detail) {
-    response.error("Missing 'detail'");
-    return;
-  }
-	if (!request.params.detail.journalId) {
-		response.error("Missing journalId");
-		return;
-	}
-
-  // Charge the user's card:
-  var charge = stripe.charges.create({
-    amount: request.params.amount * 100,
-    currency: "aud",
-    description: "Payment from user #" + request.user.id,
-    metadata: request.params.detail,
-    capture: true,
-    source: request.params.token
-    // customer: request.params.stripeCustomer,
-  }, function(err, charge) {
-    // asynchronously called
-	  if (!err) {
-	  	const journalId = request.params.detail.journalId
-
-		  const journalQuery = new Parse.Query('Journal')
-
-		  journalQuery.equalTo('objectId', journalId)
-		  journalQuery.first()
-			  .then(function (journal) {
-				  journal.set('status', 'COMPLETED')
-				  journal.save()
-
-				  response.success(charge)
-			  })
-			  .catch(function () {
-				  response.error('journal lookup failed')
-			  })
-	  } else {
-		  response.error(err)
-	  }
-  });
-
-});
-
-// Parse.Cloud.define("stripeCreateCustomer", function(request, response){
-//   if (!request.user) {
-//     response.error("Must be signed in to call this Cloud Function.")
-//     return;
-//   }
-//   var query = new Parse.Query("_User");
-
-//   query.get(request.user.id).then(function(user){
-//     if(user.get('role') === 'conso') { 
-//       if (!request.params.source) {
-//         response.error("Missing source token");
-//         return;
-//       }
-//       if (!request.params.nameCard) {
-//         response.error("Missing nameCard");
-//         return;
-//       }
-//       if (!request.params.numberCard) {
-//         response.error("Missing numberCard");
-//         return;
-//       }
-//       if (!request.params.expirationDate) {
-//         response.error("Missing expirationDate");
-//         return;
-//       }
-     
-//       stripe.customers.create({
-//         description: 'User: ' + user.get("email"),
-//         source: request.params.source // obtained with Stripe.js
-//       }, function(err, customer) {
-//         // asynchronously called
-//         if (err) 
-//           response.error(err);
-//         else {
-//           var listCards = user.get('visaCard') ? user.get('visaCard') : [];
-
-//           listCards.push({
-//             nameCard: request.params.nameCard,
-//             numberCard: request.params.numberCard,
-//             expirationDate: request.params.expirationDate,
-//             customerId: customer.id
-//           });
-
-//           user.set('visaCard', listCards);
-//           // save card
-//           user.save(null,{useMasterKey:true}).then(
-//             function(user){
-//               response.success("Successfully updated user.");
-//             }, function(error){
-//               response.error(error);
-//             })
-
-//         }
-//       });
-//     } else {
-//       response.error('Must be consomatrice user');
-//     }
-//   },
-//   function(error) {
-//     response.error(error);
-//   });
-
-// });
