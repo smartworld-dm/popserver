@@ -110,66 +110,27 @@ const charge = (user, amount, detail, customer, response) => {
 		})
 }
 
-// Parse.Cloud.define("stripeCreateCustomer", function(request, response){
-//   if (!request.user) {
-//     response.error("Must be signed in to call this Cloud Function.")
-//     return;
-//   }
-//   var query = new Parse.Query("_User");
+exports.getCards = (request, response) => {
+	if (!request.user || !request.user.get('stripeId')) {
+		// rejecting promise
+		//return Promise.reject('error')
+		response.error('user is not signed in or stripeID not found')
+		return
+	}
 
-//   query.get(request.user.id).then(function(user){
-//     if(user.get('role') === 'conso') {
-//       if (!request.params.source) {
-//         response.error("Missing source token");
-//         return;
-//       }
-//       if (!request.params.nameCard) {
-//         response.error("Missing nameCard");
-//         return;
-//       }
-//       if (!request.params.numberCard) {
-//         response.error("Missing numberCard");
-//         return;
-//       }
-//       if (!request.params.expirationDate) {
-//         response.error("Missing expirationDate");
-//         return;
-//       }
+	let stripeId = request.user.get('stripeId')
 
-//       stripe.customers.create({
-//         description: 'User: ' + user.get("email"),
-//         source: request.params.source // obtained with Stripe.js
-//       }, function(err, customer) {
-//         // asynchronously called
-//         if (err)
-//           response.error(err);
-//         else {
-//           var listCards = user.get('visaCard') ? user.get('visaCard') : [];
-
-//           listCards.push({
-//             nameCard: request.params.nameCard,
-//             numberCard: request.params.numberCard,
-//             expirationDate: request.params.expirationDate,
-//             customerId: customer.id
-//           });
-
-//           user.set('visaCard', listCards);
-//           // save card
-//           user.save(null,{useMasterKey:true}).then(
-//             function(user){
-//               response.success("Successfully updated user.");
-//             }, function(error){
-//               response.error(error);
-//             })
-
-//         }
-//       });
-//     } else {
-//       response.error('Must be consomatrice user');
-//     }
-//   },
-//   function(error) {
-//     response.error(error);
-//   });
-
-// });
+	stripe.customers.retrieve(
+		stripeId,
+		function(err, customer) {
+			// asynchronously called
+			if (err) {
+				response.error(err)
+				return
+			} else {
+				//console.log('stripe customer info: ', customer.sources.data)
+				response.success(customer.sources.data)
+			}
+		}
+	)
+}

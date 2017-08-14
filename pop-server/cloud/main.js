@@ -17,6 +17,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 // Stripe functions
 Parse.Cloud.define("stripeCharge", stripe.stripeCharge)
+Parse.Cloud.define('getCards', stripe.getCards)
 
 Parse.Cloud.define('getListPhoto', function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
