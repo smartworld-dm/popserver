@@ -1,9 +1,8 @@
 'use strict'
 
-const stripeTestSecretKey = "sk_test_P97UxMQ2bXfzto8tkoKbh6Hq"
-const stripeTestPublicKey = "pk_test_j0DRrC8XFPCeFW36VQ6NFgDS"
+const stripeSecretKey = "sk_test_P97UxMQ2bXfzto8tkoKbh6Hq"
 
-const stripe = require("stripe")(stripeTestSecretKey)
+const stripe = require("stripe")(stripeSecretKey)
 
 exports.stripeCharge = (request, response) => {
 	if (!request.user) {
@@ -33,8 +32,8 @@ exports.stripeCharge = (request, response) => {
 	const userStripeId = user.get('stripeId')
 	
 	if (!userStripeId) { // hasn't a stripe customer yet
-		if(!request.params.token) {
-			response.error("Missing 'token'")
+		if(!request.params.source) {
+			response.error("Missing 'source'")
 			return;
 		}
 		
@@ -53,7 +52,7 @@ exports.stripeCharge = (request, response) => {
 			user.save(null, {useMasterKey: true})
 				.then(function(user) {
 					// The save was successful.
-					charge(user, amount, detail, customer.id, response)
+					charge(user, amount, detail, customer.id, null, response)
 				}, function(error) {
 					// The save failed.  Error is an instance of Parse.Error.
 					response.error('save user error', error)
@@ -61,13 +60,14 @@ exports.stripeCharge = (request, response) => {
 				});
 		});
 	} else {
+		let cardId = request.params && request.params.source
 		// charge stripe customer
-		charge(user, amount, detail, userStripeId, response)
+		charge(user, amount, detail, userStripeId, cardId, response)
 	}
 }
 
 // Charge the user's card:
-const charge = (user, amount, detail, customer, response) => {
+const charge = (user, amount, detail, customer, source, response) => {
 	const journalId = detail.journalId
 
 	const journalQuery = new Parse.Query('Journal')
@@ -91,7 +91,8 @@ const charge = (user, amount, detail, customer, response) => {
 				description: "Payment from user #" + user.id,
 				metadata: detail,
 				capture: true,
-				customer: customer
+				customer: customer,
+				source: source ? source : undefined
 				// customer: request.params.stripeCustomer,
 			}, function(err, charge) {
 				// asynchronously called
@@ -126,7 +127,6 @@ exports.getCards = (request, response) => {
 			// asynchronously called
 			if (err) {
 				response.error(err)
-				return
 			} else {
 				//console.log('stripe customer info: ', customer.sources.data)
 				response.success(customer.sources.data)
