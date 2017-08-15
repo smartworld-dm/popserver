@@ -76,7 +76,7 @@ const charge = (user, amount, detail, customer, source, response) => {
 	journalQuery.first()
 		.then(function (journal) {
 			if (!journal) {
-				response.error(err)
+				response.error('journal lookup failed')
 				return false
 			}
 
@@ -106,8 +106,8 @@ const charge = (user, amount, detail, customer, source, response) => {
 				}
 			})
 		})
-		.catch(function () {
-			response.error('journal lookup failed')
+		.catch(function (error) {
+			response.error(error)
 		})
 }
 
