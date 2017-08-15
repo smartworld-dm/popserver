@@ -1,10 +1,12 @@
 'use strict'
-
+require('./users');
 const stripe = require('./StripeFunctions')
 
 var request = require('request').defaults({ encoding: null });
 var Jimp = require("jimp");
 var fs = require("fs");
+
+
 
 // const bitly = new Bitly('752ea5696163f4d88160bc4a008166d60183d9ef');
 
