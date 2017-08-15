@@ -60,9 +60,21 @@ exports.stripeCharge = (request, response) => {
 				});
 		});
 	} else {
-		let cardId = request.params && request.params.source
-		// charge stripe customer
-		charge(user, amount, detail, userStripeId, cardId, response)
+		let source = request.params && request.params.source
+
+		if (source && source.indexOf('tok') !== -1) {
+			stripe.customers.createSource(userStripeId, {
+				source: source
+			}, function(err, card) {
+				console.log('added new card to customer')
+				// asynchronously called
+				// charge stripe customer
+				charge(user, amount, detail, userStripeId, card.id, response)
+			})
+		} else {
+			// charge stripe customer
+			charge(user, amount, detail, userStripeId, source, response)
+		}
 	}
 }
 
