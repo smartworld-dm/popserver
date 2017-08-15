@@ -63,6 +63,7 @@ exports.stripeCharge = (request, response) => {
 		let source = request.params && request.params.source
 
 		if (source && source.indexOf('tok') !== -1) {
+			// adding new card to existing customer
 			stripe.customers.createSource(userStripeId, {
 				source: source
 			}, function(err, card) {
