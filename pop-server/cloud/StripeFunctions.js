@@ -40,7 +40,7 @@ exports.stripeCharge = (request, response) => {
 		//create customer
 		stripe.customers.create({
 			description: '#' + user.id + ' - ' + user.get('email'),
-			source: request.params.token // obtained with Stripe.js
+			source: request.params.source // obtained with Stripe.js
 		}, function(err, customer) {
 			// asynchronously called
 			if (err) {
