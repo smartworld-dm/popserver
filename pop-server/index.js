@@ -21,6 +21,12 @@ var api = new ParseServer({
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   },
+	auth: {
+		twitter: {
+			consumer_key: "dwPzST47e60UCbuXhL68fnohV", // REQUIRED
+			consumer_secret: "uu1Jq84IFVzh2t7PE7PBD3XItpDRnf0lPNIslfKVPzwS9u5CQW" // REQUIRED
+		}
+	},
   revokeSessionOnPasswordReset: true,
 
   //Enable email verification
