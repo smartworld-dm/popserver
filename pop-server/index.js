@@ -58,7 +58,7 @@ var api = new ParseServer({
    module: 'parse-server-mailgun',
     options: {
       // The address that your emails come from
-      fromAddress: 'develop@ant-tech.eu',
+      fromAddress: 'ha.luu@techwitty.com.au',
       // Your domain from mailgun.com
       domain: 'mg.ant-tech.eu',
       // Your API key from mailgun.com
