@@ -1,5 +1,5 @@
 'use strict'
-require('./users');
+const userFunction = require('./users')
 const stripe = require('./StripeFunctions')
 
 var request = require('request').defaults({ encoding: null });
@@ -17,10 +17,15 @@ Parse.Cloud.define('hello', function(req, res) {
   res.success('Hi');
 });
 
+// User functions
+Parse.Cloud.define('getUsers', userFunction.getUsers)
+Parse.Cloud.define('updatePopCoin', userFunction.updatePopCoin)
+
 // Stripe functions
 Parse.Cloud.define("stripeCharge", stripe.stripeCharge)
 Parse.Cloud.define('getCards', stripe.getCards)
 
+//
 Parse.Cloud.define('getListPhoto', function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
 		res.error("Missing params or wrong format: arrPhotos");
@@ -47,139 +52,6 @@ Parse.Cloud.define('getListPhoto', function(req, res) {
 	}
 	photo_repeater(0);
 })
-
-Parse.Cloud.job("resizePhoto", function(req, res) {
- 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
-		res.error("Missing params or wrong format: arrPhotos");
-		return;
-	}
-	var responseAll = [];
-	var listPhotos = req.params.arrPhotos;
-	function photo_repeater(i) {
-		if(i < listPhotos.length) {
-			if(listPhotos[i].objectId) {
-				var query = new Parse.Query("Photos")
-				query.get(listPhotos[i].objectId, {
-					success: function(photo) {
-						if(photo) {
-							Jimp.read(photo.get('image')._url, function (err, image) {
-								if(err) {
-									responseAll.push(err);
-									photo_repeater(i + 1);
-								} else {
-									image.resize(640, Jimp.AUTO).quality(60);
-									image.getBase64(Jimp.AUTO, (err, base64) => {
-										if (err) {
-											responseAll.push(err);
-											photo_repeater(i + 1);
-										} else {
-											var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
-											parseFile.save().then(function(dataFile) {
-												photo.set('thumbnail', dataFile);
-												photo.save(null, {
-													success: function(photoResult) {
-														responseAll.push(photoResult);
-														photo_repeater(i + 1);
-													},
-													error: function(photoResult, error) {
-														responseAll.push(error);
-														photo_repeater(i + 1);
-													}
-												});
-											}, function(error) {
-												rresponseAll.push(error);
-												photo_repeater(i + 1);
-											});
-											
-										}
-									});
-								}
-							});
-						} else {
-							responseAll.push({code: 404, message: 'Object not found'});
-							photo_repeater(i + 1);
-						}
-						
-					},
-					error: function(object, error) {
-						responseAll.push(error);
-						photo_repeater(i + 1);
-					}
-				});
-			} else {
-				responseAll.push({code: 404, message: 'Missing params: image, objectId'});
-				photo_repeater(i + 1);
-			}
-			
-		} else {
-			res.success(responseAll);
-		}
-	}
-	photo_repeater(0);
-});
-
-Parse.Cloud.define("createPhoto", function(req, res) {
-	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
-		res.error("Missing params or wrong format: arrPhotos");
-		return;
-	}
-console.log(req.params.arrPhotos)
-	var responseAll = [];
-	var listPhotos = req.params.arrPhotos;
-	function photo_repeater(i) {
-		if(i < listPhotos.length) {
-			if(listPhotos[i].image && listPhotos[i].image._url && listPhotos[i].user && listPhotos[i].date) {
-				Jimp.read(listPhotos[i].image._url, function (err, image) {
-					if(err) {
-						responseAll.push(err);
-						photo_repeater(i + 1);
-					} else {
-						image.resize(640, Jimp.AUTO)
-							.quality(60); 
-						image.getBase64(Jimp.AUTO, (err, base64) => {
-							if (err) {
-								responseAll.push(err);
-								photo_repeater(i + 1);
-							} else {
-								var Photo = Parse.Object.extend("Photos");
-								var photo = new Photo();
-								photo.set('isArtwork', false);
-								photo.set('user', listPhotos[i].user);
-								photo.set('image', listPhotos[i].image);
-								photo.set('date', listPhotos[i].date);
-								var parseFile = new Parse.File("1024." + image.getExtension(), { base64: base64 });
-								parseFile.save().then(function(dataFile) {
-									photo.set('thumbnail', dataFile);
-									photo.save(null, {
-										success: function(photoResult) {
-											responseAll.push(photoResult);
-											photo_repeater(i + 1);
-										},
-										error: function(photoResult, error) {
-											responseAll.push(error);
-											photo_repeater(i + 1);
-										}
-									});
-								}, function(error) {
-									rresponseAll.push(error);
-									photo_repeater(i + 1);
-								});
-								
-							}
-						});
-					}
-				});
-			} else {
-				responseAll.push({code: 404, message: 'Missing params: image, user, date'});
-				photo_repeater(i + 1);
-			}
-			
-		} else {
-			res.success(responseAll);
-		}
-	}
-	photo_repeater(0);
-});
 
 Parse.Cloud.beforeSave("Category", function(req, res) {
 	
