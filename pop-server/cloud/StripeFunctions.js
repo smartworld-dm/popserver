@@ -40,7 +40,7 @@ exports.stripeCharge = (request, response) => {
 		//create customer
 		stripe.customers.create({
 			description: '#' + user.id + ' - ' + user.get('email'),
-			source: request.params.source // obtained with Stripe.js
+			source: request.params.token // obtained with Stripe.js
 		}, function(err, customer) {
 			// asynchronously called
 			if (err) {
@@ -60,22 +60,9 @@ exports.stripeCharge = (request, response) => {
 				});
 		});
 	} else {
-		let source = request.params && request.params.source
-
-		if (source && source.indexOf('tok') !== -1) {
-			// adding new card to existing customer
-			stripe.customers.createSource(userStripeId, {
-				source: source
-			}, function(err, card) {
-				console.log('added new card to customer')
-				// asynchronously called
-				// charge stripe customer
-				charge(user, amount, detail, userStripeId, card.id, response)
-			})
-		} else {
-			// charge stripe customer
-			charge(user, amount, detail, userStripeId, source, response)
-		}
+		let cardId = request.params && request.params.source
+		// charge stripe customer
+		charge(user, amount, detail, userStripeId, cardId, response)
 	}
 }
 
@@ -111,6 +98,7 @@ const charge = (user, amount, detail, customer, source, response) => {
 				// asynchronously called
 				if (!err) {
 					journal.set('status', 'COMPLETED')
+					journal.set('orderStatus', 'PENDING')
 					journal.save()
 
 					response.success(charge)
