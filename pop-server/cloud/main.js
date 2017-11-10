@@ -1,11 +1,13 @@
 'use strict'
 const userFunction = require('./users')
 const stripe = require('./StripeFunctions')
+const generateXml = require('./generateXML');
+const generateOrderListXml = require('./generateOrderListXml');
 
 var request = require('request').defaults({ encoding: null });
 var Jimp = require("jimp");
 var fs = require("fs");
-
+var htmlToPdf = require('html-to-pdf');
 
 
 // const bitly = new Bitly('752ea5696163f4d88160bc4a008166d60183d9ef');
@@ -14,7 +16,8 @@ var fs = require("fs");
 // const appDomain = '198.100.145.58';
 
 Parse.Cloud.define('hello', function(req, res) {
-  res.success('Hi');
+	console.log('helloss');
+    res.success('hi');
 });
 
 // User functions
@@ -23,8 +26,28 @@ Parse.Cloud.define('updatePopCoin', userFunction.updatePopCoin)
 
 // Stripe functions
 Parse.Cloud.define("stripeCharge", stripe.stripeCharge)
-Parse.Cloud.define('getCards', stripe.getCards)
+Parse.Cloud.define('getCards', stripe.getCards);
 
+Parse.Cloud.define('generatePDF',function (req, res) {
+    var html = "<html> <body><p>Hi this is my pdf</p>" +
+		" <img src='/home/guneet/Pictures/Screenshot from 2017-10-09 12-48-34.png'/>" +
+	"</body> <html>";//Some HTML String from code above
+
+    htmlToPdf.convertHTMLString(html, 'mypdf.pdf',
+        function (error, success) {
+            if (error) {
+                console.log('Oh noes! Errorz!');
+                console.log(error);
+            } else {
+                console.log('Woot! Success!');
+                console.log(success);
+                res.success('generated');
+            }
+        }
+    );
+});
+Parse.Cloud.define("generateXML",generateXml.generateXml)
+Parse.Cloud.define("generateOrderListXml",generateOrderListXml.generateOrderListXml)
 //
 Parse.Cloud.define('getListPhoto', function(req, res) {
 	if(!req.params.arrPhotos || req.params.arrPhotos.length === 0) {
@@ -93,3 +116,5 @@ Parse.Cloud.beforeSave("Category", function(req, res) {
 	});
 
 });
+
+
