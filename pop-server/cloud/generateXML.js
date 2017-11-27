@@ -213,6 +213,7 @@ exports.generateXml = (req, res) => {
         //Preparing pdf content on basis of jounalId.
         var journalId = req.params.journalId;
         var pdfContent ='';
+        var pdfCoverContent ='';
 
         var header = "<!DOCTYPE html>";
         header +='<html>';
@@ -242,16 +243,7 @@ exports.generateXml = (req, res) => {
                 console.log(albumSize.objectId);
                 console.log(albumSize.className);
 
-                /*var config = {
-                            'margin':'0',
-                            'padding':'0',
-                            'width':'8in',
-                            'height':'11in',
-                            "type": "pdf,jpg,jpeg,png"
-                }*/
-
-
-
+            
                 var albumpromise = new Parse.Promise();
 
                 var albumClass = Parse.Object.extend(albumSize.className);
@@ -288,7 +280,7 @@ exports.generateXml = (req, res) => {
                                         console.log(pageDetail[i].template);
 
 
-                                       /* if(pageDetail[i].template =="TEMPLATE_1"  &&  pageDetail[i].photos[0]["photoURL"]!=null) {
+                                        if(pageDetail[i].template =="TEMPLATE_1"  &&  pageDetail[i].photos[0]["photoURL"]!=null) {
                                             
 
 
@@ -305,7 +297,7 @@ exports.generateXml = (req, res) => {
 
                                             pdfContent += template_1;
                                  
-                                        }*/
+                                        }
 
                                         if(pageDetail[i].template =="TEMPLATE_2" && ( pageDetail[i].photos[0]["photoURL"]!=null || pageDetail[i].photos[1]["photoURL"]!=null )) {
 
@@ -414,6 +406,8 @@ exports.generateXml = (req, res) => {
 
                                             pdfContent += template_5;
 
+
+
                                         }
                                         else if(pageDetail[i].template =="TEMPLATE_6" &&
                                             (  pageDetail[i].photos[0]["photoURL"]!=null ||
@@ -458,8 +452,6 @@ exports.generateXml = (req, res) => {
                                         {
                                             var template_7 ='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
-                                            
-                                            //if( pageDetail[i].photos[0]["photoURL"]!=null || pageDetail[i].photos[1]["photoURL"]!=null ) {
 
                                                 template_7 += '<div style="float: left; height:4in; width: 98%; margin:1% 1% 1% 1%;  overflow:hidden; ">';
 
@@ -469,16 +461,35 @@ exports.generateXml = (req, res) => {
 
                                                 template_7+='</div>';
                                                 
-                                            //}
-                                           // if(pageDetail[i].photos[2]["photoURL"]!=null) {
+                                          
 
                                                 template_7+='<div style="float: left; height:4in; overflow:hidden; margin:0 1% 1% 1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
 
                                                 template_7+='</div>';
-                                            //}
+                                    
                                             
                                             template_7+='</div>';
                                             pdfContent += template_7;
+                                        }
+                                        if(pageDetail[i].template =="TEMPLATE_8" &&
+                                            (  pageDetail[i].photos[0]["photoURL"]!=null ||
+                                            pageDetail[i].photos[1]["photoURL"]!=null ||
+                                            pageDetail[i].photos[2]["photoURL"]!=null )
+                                        )
+                                        {
+
+                                        var template_8 ='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+                                            
+                                            template_8+='<div style="float: left; height:2.05in; overflow:hidden; margin:3in 0.5% 5% 1%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                                
+                                        
+                                            template_8+='<div style="float: left;  height:4.05in; overflow:hidden; margin:2in 1% 1% 0.5%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+
+                                            template_8+='<div style="float: left;  height:2.05in; overflow:hidden; margin:3in 1% 1% 0.5%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                            template_8 += "</div>";
+
+                                            pdfContent += template_8;
+                            
                                         }
 
                                         else if(pageDetail[i].template =="TEMPLATE_9" &&
@@ -515,31 +526,23 @@ exports.generateXml = (req, res) => {
                                         {
                                             var template_10='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
-                                            //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
                                                 template_10 += '<div style="float: left; height:8.05in; overflow:hidden; margin:1% 0.5% 1% 1%; padding: 0; width: 68.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                            //}
-
+                                        
                                             template_10 += '<div style="margin:1% 1% 1% 0.5%; float: left; height:8.1in; width: 28.5%;  overflow:hidden; ">';
 
-                                                //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
 
                                                     
                                                         template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin:0 0 0.5% 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
 
-                                                //}
-
-                                                //if( pageDetail[i].photos[2]["photoURL"]!=null ) {
 
                                                    
                                                     template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin:0.5% 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                    
-                                                //}
-                                                //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
+                                     
 
                                                    
                                                     template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin: 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                     
-                                                //}
+                                                
                                                 template_10 +=  '</div>';
 
                                             template_10 +=  '</div>';
@@ -660,7 +663,6 @@ exports.generateXml = (req, res) => {
                                                 }
 
                                              template_13 +=  '</div>';
-
                                              template_13 +=  '</div>';
 
 
@@ -669,44 +671,33 @@ exports.generateXml = (req, res) => {
 
                                         else if(pageDetail[i].template =="TEMPLATE_14" && ( pageDetail[i].photos[0]["photoURL"]!=null ||  pageDetail[i].photos[1]["photoURL"]!=null ||  pageDetail[i].photos[2]["photoURL"]!=null ||  pageDetail[i].photos[3]["photoURL"]!=null ||  pageDetail[i].photos[4]["photoURL"]!=null)) 
                                         {
-                                            console.log(pageDetail[i].photos[0]["photoURL"]);
-                                            console.log(pageDetail[i].photos[1]["photoURL"]);
-                                            console.log(pageDetail[i].photos[2]["photoURL"]);
-                                            console.log(pageDetail[i].photos[3]["photoURL"]);
-                                            console.log(pageDetail[i].photos[4]["photoURL"]);
+                                            
 
 
                                             var template_14='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
                                                 template_14 +='<div style="float: left; height:5.5in; width:98%; overflow: hidden; margin: 1%  1% 0 1%;" >';
 
-                                                //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
                                                 template_14 += '<div style="float: left; height:5.5in; overflow:hidden; margin:1% 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                             
 
                                                  template_14 +='<div style="float: left; height:5.5n; width:29.5%; margin: 1% 0 1% 0.5%; overflow: hidden;">';
-                                                //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                 
                                                 
                                                 template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                                //if( pageDetail[i].photos[2]["photoURL"]!=null ) {
+                                 
                                                 template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                                
                                                  template_14 +='</div>';
 
                                                 template_14 +='</div>';
 
                                                 template_14 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1% 1% 1%;">';
 
-                                                //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
                                                 template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                            
-                                                //if( pageDetail[i].photos[4]["photoURL"]!=null ) {
+                                               
                                                 template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                                 
 
                                                 template_14 +=  '</div>';
 
@@ -726,33 +717,25 @@ exports.generateXml = (req, res) => {
                                                 template_15 +='<div style="float: left; height:5.4in; width:98%; overflow: hidden; margin: 1% 1% 0 1%" >';
 
                                                 template_15 +='<div style="float: left; height:5.4n; width:30%; margin: 0; overflow: hidden;">';
-                                                //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                                
                                                 
                                                 template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                                //if( pageDetail[i].photos[2]["photoURL"]!=null ) {
+                                              
                                                 template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                                
                                                  template_15 +='</div>';
 
-                                                //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
                                                 template_15 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                              
 
                                                 template_15 +='</div>';
 
                                                 template_15 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1%;">';
 
-                                                //if( pageDetail[i].photos[4]["photoURL"]!=null ) {
                                                 template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0 ; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                                //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
+                                             
                                                 template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-
+                                              
                                                 template_15 +=  '</div>';
 
                                                 template_15 +=  '</div>';
@@ -813,82 +796,69 @@ exports.generateXml = (req, res) => {
 
                                             template_17 += '<div style="margin:1%; float: left; height:5.4in; width: 98%;  overflow:hidden; ">';
 
-                                             //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
+                                        
                                                 template_17 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                           //}
-                                             //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                          
                                                 template_17+= '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                           // }
+                                          
 
-                                            template_17 +=  '</div>';
+                                        template_17 +=  '</div>';
 
-                                            template_17 += '<div style="margin:0% 1% 0 1%; float: left; height:2.7in; width: 98%;  overflow:hidden; ">';
+                                        template_17 += '<div style="margin:0% 1% 0 1%; float: left; height:2.7in; width: 98%;  overflow:hidden; ">';
 
-                                               // if( pageDetail[i].photos[2]["photoURL"]!=null ) {
 
-                                                    
-                                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                               
+                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
 
-                                               // }
-
-                                                //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
+                                              
 
                                                    
-                                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                     
-                                                //}
-                                                //if( pageDetail[i].photos[4]["photoURL"]!=null ) {
+                                               
 
                                                    
-                                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                     
-                                                //}
-                                            template_17 +=  '</div>';
+                                    template_17 +=  '</div>';
 
-                                            template_17 +=  '</div>';
+                                    template_17 +=  '</div>';
 
-                                            pdfContent += template_17;
+                                    pdfContent += template_17;
 
-                                        }
-                                         else if(pageDetail[i].template =="TEMPLATE_18" && ( pageDetail[i].photos[0]["photoURL"]!=null ||  pageDetail[i].photos[1]["photoURL"]!=null ||  pageDetail[i].photos[2]["photoURL"]!=null ||  pageDetail[i].photos[3]["photoURL"]!=null ||  pageDetail[i].photos[4]["photoURL"]!=null ||  pageDetail[i].photos[5]["photoURL"]!=null)) 
+                                }
+                                else if(pageDetail[i].template =="TEMPLATE_18" && ( pageDetail[i].photos[0]["photoURL"]!=null ||  pageDetail[i].photos[1]["photoURL"]!=null ||  pageDetail[i].photos[2]["photoURL"]!=null ||  pageDetail[i].photos[3]["photoURL"]!=null ||  pageDetail[i].photos[4]["photoURL"]!=null ||  pageDetail[i].photos[5]["photoURL"]!=null)) 
                                         {
                                             var template_18='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
                                                 template_18 +='<div style="float: left; height:5.4in; width:98%; overflow: hidden; margin: 1%  1% 1% 1%;" >';
 
-                                                //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
+                                              
                                                 template_18 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
 
 
-                                                 //}
+                                                 
 
-                                                 template_18 +='<div style="float: left; height:5.4in; width:29.5%; margin: 0 0 1% 0.5%; overflow: hidden;">';
-                                                //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                                template_18 +='<div style="float: left; height:5.4in; width:29.5%; margin: 0 0 1% 0.5%; overflow: hidden;">';
+                                             
                                                 
                                                 template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                                //if( pageDetail[i].photos[2]["photoURL"]!=null ) {
+                                           
                                                 template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                            
                                                  template_18 +='</div>';
 
                                                 template_18 +='</div>';
 
                                                 template_18 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1%;">';
 
-                                                //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
+                                         
                                                 template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 0 0 ; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                            
-                                                //if( pageDetail[i].photos[4]["photoURL"]!=null ) {
+                                             
                                                 template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 0 0.5%; padding: 0; width: 32.33%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
-
-                                                 //if( pageDetail[i].photos[4]["photoURL"]!=null ) {
+                                          
                                                 template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                                 //}
+                                               
 
                                                 template_18 +=  '</div>';
 
@@ -1033,12 +1003,14 @@ exports.generateXml = (req, res) => {
                                                     template_5 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 48%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                
                                                 
-                                            }
+                                        }
 
                                        
                                         template_5 +=  '</div>';
 
                                         pdfContent += template_5;
+
+                                        
 
                                     }
                                      else if(pageDetail[i].template =="TEMPLATE_6" &&
@@ -1085,24 +1057,41 @@ exports.generateXml = (req, res) => {
                                         var template_7 ='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
                                         
-                                        //if( pageDetail[i].photos[0]["photoURL"]!=null || pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                       
+                                    template_7 += '<div style="margin:1%; float: left; height:2.86in; width: 98%;  overflow:hidden; ">';
+                                    template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                    template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
 
-                                            template_7 += '<div style="margin:1%; float: left; height:2.86in; width: 98%;  overflow:hidden; ">';
-                                            template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
-                                            template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-
-                                            template_7+='</div>';
+                                    template_7+='</div>';
                                             
-                                        //}
-                                       // if(pageDetail[i].photos[2]["photoURL"]!=null) {
+                                      
+                                    template_7+='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
 
-                                            template_7+='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
-
-                                            template_7+='</div>';
-                                        //}
+                                    template_7+='</div>';
+                                  
                                         
-                                        template_7+='</div>';
-                                        pdfContent += template_7;
+                                    template_7+='</div>';
+                                    pdfContent += template_7;
+                                    }
+
+                                    else if(pageDetail[i].template =="TEMPLATE_8" &&
+                                        (  pageDetail[i].photos[0]["photoURL"]!=null ||
+                                        pageDetail[i].photos[1]["photoURL"]!=null ||
+                                        pageDetail[i].photos[2]["photoURL"]!=null )
+                                    ) {
+
+                                    var template_8 ='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+                                            
+                                            template_8+='<div style="float: left; height:1.83in; overflow:hidden; margin:2in 0.5% 5% 1%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                                
+                                        
+                                            template_8+='<div style="float: left;  height:3.83in; overflow:hidden; margin:1in 1% 1% 0.5%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+
+                                            template_8+='<div style="float: left;  height:1.83in; overflow:hidden; margin:2in 1% 1% 0.5%; padding: 0; width: 31.5%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                            template_8 += "</div>";
+
+                                            pdfContent += template_8;    
+                                        
                                     }
 
                                     else if(pageDetail[i].template =="TEMPLATE_9" &&
@@ -1137,32 +1126,29 @@ exports.generateXml = (req, res) => {
                                     {
                                         var template_10='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
-                                        //if( pageDetail[i].photos[0]["photoURL"]!=null ) {
-                                            template_10 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 68%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
-                                        //}
+                                       
+                                        template_10 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 68%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        
 
                                         template_10 += '<div style="margin:1%; float: left; height:5.83in; width: 28%;  overflow:hidden; ">';
 
-                                            //if( pageDetail[i].photos[1]["photoURL"]!=null ) {
+                                      
 
                                                 
-                                                    template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
 
-                                            //}
-
-                                            //if( pageDetail[i].photos[2]["photoURL"]!=null ) {
+                                          
 
                                                
-                                                template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                 
-                                            //}
-                                            //if( pageDetail[i].photos[3]["photoURL"]!=null ) {
+                                         
 
                                                
-                                                template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+pageDetail[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
                                                 
-                                            //}
-                                            template_10 +=  '</div>';
+                                        
+                                        template_10 +=  '</div>';
 
                                         template_10 +=  '</div>';
 
@@ -1291,13 +1277,7 @@ exports.generateXml = (req, res) => {
 
                                     else if(pageDetail[i].template =="TEMPLATE_14" && ( pageDetail[i].photos[0]["photoURL"]!=null ||  pageDetail[i].photos[1]["photoURL"]!=null ||  pageDetail[i].photos[2]["photoURL"]!=null ||  pageDetail[i].photos[3]["photoURL"]!=null ||  pageDetail[i].photos[4]["photoURL"]!=null)) 
                                     {
-                                        console.log(pageDetail[i].photos[0]["photoURL"]);
-                                        console.log(pageDetail[i].photos[1]["photoURL"]);
-                                        console.log(pageDetail[i].photos[2]["photoURL"]);
-                                        console.log(pageDetail[i].photos[3]["photoURL"]);
-                                        console.log(pageDetail[i].photos[4]["photoURL"]);
-
-
+                                
                                         var template_14='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
 
                                             template_14 +='<div style="float: left; height:4.1in; width:98%; overflow: hidden; margin: 1%  1% 0 1%;" >';
@@ -1524,55 +1504,1177 @@ exports.generateXml = (req, res) => {
 
                             } //Ends else if here..
 
-                           // else if( 4*8)
+                           //Cover PDF HTML code here..
+
+                        coverArray = [] ; 
+                        for (var i in pageDetail) 
+                        {
+                            if(pageDetail[i].pageNme =="cover") {
+
+                                coverArray.push({"template":pageDetail[i].template ,"photos" : pageDetail[i].photos })
+                              
+                            } else  {
+                                console.log(pageDetail[i].pageNme);
+                            }
+
+                        } 
+
+                        if(coverArray && coverArray.length > 0) {
+
+                            if(measurements[0] == '8' && measurements[2] == '11"' ) {
+                                var coverconfig = {
+                                    'margin':'0',
+                                    'padding':'0',
+                                    'width':'16in',
+                                    'height':'11in',
+                                    "type": "pdf,jpg,jpeg,png"
+                                }
+
+
+                            pdfCoverContent +='<div style="margin:0; padding: 0; width: 100%; height:100%; display:inline-block; overflow:hidden; ">';
+                            for (var i in coverArray) {
+                                console.log(coverArray[i].template);
+
+                                if(coverArray[i].template =="TEMPLATE_1" && coverArray[i].photos[0]["photoURL"]!=null) {
+                                
+                                    var template_1 ='<div style="margin:0; padding: 0; width: 50%; display:inline-block; overflow:hidden; ">';
+                                    
+                                    template_1+='<div style="float: left;  height:8in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                    template_1+='</div>';
+
+                                    template_1 +='</div>';
+
+                                    pdfCoverContent += template_1;
+
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_2" && ( coverArray[i].photos[0]["photoURL"]!=null || coverArray[i].photos[1]["photoURL"]!=null )) {
+
+
+                                    var template_2 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+                                    
+                                    if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                        template_2+='<div style="float: left; height:4in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                        template_2+='</div>';
+                                        
+                                    }
+                                    if( coverArray[i].photos[1]["photoURL"]!=null) {
+                                        template_2+='<div style="float: left;  height:4in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat; ">'; 
+
+                                        template_2+='</div>';
+                                    }
+
+                                    template_2+='</div>';
+                                    pdfCoverContent += template_2;
+
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_3" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null))
+                                {
+                                     var template_3 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    
+                                    if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                        template_3+='<div style="float: left; height:8.05in; overflow:hidden; margin:1% 0.5% 1% 1%; padding: 0; width: 48.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                        
+                                    }
+                                    if( coverArray[i].photos[1]["photoURL"]!=null) {
+                                        template_3+='<div style="float: left;  height:8.05in; overflow:hidden; margin:1% 1% 1% 0.5%; padding: 0; width: 48.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+
+                                     
+                                    }
+
+                                    template_3 += "</div>";
+
+                                    pdfCoverContent += template_3;
+
+                                }
+
+                                if( coverArray[i].template =="TEMPLATE_4" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null)) {
+
+                                    var template_4 = '<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    if( coverArray[i].photos[0]["photoURL"]!=null ) {
+                                        template_4 += '<div style="float: left; height:8.05in; overflow:hidden; margin:1% 0.5% 1% 1%; padding: 0; width: 48.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+
+                                    if( coverArray[i].photos[1]["photoURL"]==null &&  coverArray[i].photos[2]["photoURL"]==null) {
+
+                                    } else {
+
+                                        template_4 += '<div style="margin:1% 1% 1% 0.5%; float: left; height:8.05in; width: 48.5%;  overflow:hidden; ">';
+
+                                        if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                            
+                                                template_4 +='<div style="float: left; height:4in; overflow:hidden; margin: 0 0 1% 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_4 +='<div style="float: left; height:4in; overflow:hidden; margin:1% 0 0 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                        template_4 +=  '</div>'
+                                    }
+
+                                    template_4 +=  '</div>';
+
+                                    pdfCoverContent += template_4;
+
+                                }
+
+                                 if( coverArray[i].template =="TEMPLATE_5" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null)) {
+
+                                    var template_5 = '<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    if( coverArray[i].photos[1]["photoURL"]!=null || coverArray[i].photos[0]["photoURL"]!=null ) {
+                                   
+
+                                        template_5 += '<div style="margin:1% 0.5% 1% 1%; float: left; height:8in; width: 48.5%;  overflow:hidden; ">';
+
+                                        template_5 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0 1% 0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                         template_5 +='<div style="float: left; height:4in; overflow:hidden; margin:1% 0 0 0; margin-left:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+
+                                         template_5 +=  '</div>'; 
+                                    }
+                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                template_5 += '<div style="float: left; height:8.05in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 48.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                           
+                                            
+                                        }
+
+                                   
+                                    template_5 +=  '</div>';
+
+                                    pdfCoverContent += template_5;
+
+                                }
+                                if( coverArray[i].template =="TEMPLATE_6" &&
+                                    (  coverArray[i].photos[0]["photoURL"]!=null ||
+                                    coverArray[i].photos[1]["photoURL"]!=null ||
+                                    coverArray[i].photos[2]["photoURL"]!=null )
+                                )
+                                {
+                                    var template_6 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    
+                                    if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                        template_6+='<div style="float: left; height:4in; overflow:hidden; margin:1% 0.5% 1% 1%; padding: 0; width: 98.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                        template_6+='</div>';
+                                        
+                                    }
+                                    template_6 += '<div style="margin:1% 1% 0.5% 1%; float: left; height:4.1in; width: 98.5%;  overflow:hidden; ">';
+
+                                        if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                            
+                                                template_6 +='<div style="float: left; height:4.1in; overflow:hidden; margin:0 0.5% 0 0 ;  padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_6 +='<div style="float: left; height:4.1in; overflow:hidden; margin:0 0 1% 0.5%;  padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+
+                                    template_6+='</div>';
+                                    pdfCoverContent += template_6;
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_7" &&
+                                    (  coverArray[i].photos[0]["photoURL"]!=null ||
+                                    coverArray[i].photos[1]["photoURL"]!=null ||
+                                    coverArray[i].photos[2]["photoURL"]!=null )
+                                )
+                                {
+                                    var template_7 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+
+                                        template_7 += '<div style="float: left; height:4in; width: 98%; margin:1% 1% 1% 1%;  overflow:hidden; ">';
+
+                                        template_7 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0 0.5% 0; margin-left:0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+
+                                        template_7 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0 0 0.5%; margin-right:0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        template_7+='</div>';
+                                        
+                                        template_7+='<div style="float: left; height:4in; overflow:hidden; margin:0 1% 1% 1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                        template_7+='</div>';
+
+                                    
+                                    template_7+='</div>';
+                                    pdfCoverContent += template_7;
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_9" &&
+                                    ( coverArray[i].photos[0]["photoURL"]!=null ||
+                                    coverArray[i].photos[1]["photoURL"]!=null ||
+                                    coverArray[i].photos[2]["photoURL"]!=null ||
+                                    coverArray[i].photos[3]["photoURL"]!=null )
+                                )
+                                {
+                                    var template_9 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                        template_9 += '<div style="margin:1%; float: left; height:4in; width: 98%;  overflow:hidden; ">';
+
+                                        template_9 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0.5% 0.5% 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+
+                                        template_9 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0 0.5% 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        template_9+='</div>';
+
+                                        template_9 += '<div style="margin:0 1% 1% 1%; float: left; height:4.05in; width: 98%;  overflow:hidden; ">';
+                                        template_9 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                        template_9 +='<div style="float: left; height:4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        template_9+='</div>';
+
+
+
+                                    template_9+='</div>';
+                                    pdfCoverContent += template_9;
+
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_10" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                {
+                                    var template_10='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+                                 
+                                    template_10 += '<div style="float: left; height:8.05in; overflow:hidden; margin:1% 0.5% 1% 1%; padding: 0; width: 68.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                    template_10 += '<div style="margin:1% 1% 1% 0.5%; float: left; height:8.1in; width: 28.5%;  overflow:hidden; ">';
+                                   
+                                    template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin:0 0 0.5% 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin:0.5% 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';        
+                                    template_10 +='<div style="float: left; height:2.67in; overflow:hidden; margin: 0; margin-right:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                    template_10 +=  '</div>';
+
+                                    template_10 +=  '</div>';
+
+
+                                    pdfCoverContent += template_10;
+
+                                }
+
+                                if( coverArray[i].template =="TEMPLATE_11" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                {
+                                    var template_11='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    
+
+                                    template_11 += '<div style="margin:1% 0.5% 1% 1% ; float: left; height:8.05in; width: 28.5%;  overflow:hidden; ">';
+
+                                        if( coverArray[i].photos[0]["photoURL"]!=null ) {
+
+                                            
+                                                template_11 +='<div style="float: left; height:2.67in; overflow:hidden; margin:0 0 0.5% 0; margin-left:0; padding: 0; width: 100%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                           
+                                            template_11 +='<div style="float: left; height:2.67in; overflow:hidden; margin:margin:0.5% 0;  padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_11 +='<div style="float: left; height:2.67in; overflow:hidden; margin:margin:0.5% 0 0 0; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                        template_11 +=  '</div>';
+
+                                     if( coverArray[i].photos[3]["photoURL"]!=null ) {
+                                        template_11 += '<div style="float: left; height:8.05in; overflow:hidden; margin:1% 1% 1% 0.5%; padding: 0; width: 68%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+
+                                    template_11 +=  '</div>';
+
+
+                                    pdfCoverContent += template_11;
+
+                                }
+
+                               if(coverArray[i].template =="TEMPLATE_12" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                {
+                                    var template_12='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    template_12 += '<div style="margin:1% 1% 0 1%; float: left; height:2.66in; width: 98%;  overflow:hidden; ">';
+
+                                        if( coverArray[i].photos[0]["photoURL"]!=null ) {
+
+                                            
+                                            template_12 +='<div style="float: left; height:2.66in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                           
+                                            template_12 +='<div style="float: left; height:2.66in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_12 +='<div style="float: left; height:2.66in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                    template_12 +=  '</div>';
+
+                                     if( coverArray[i].photos[3]["photoURL"]!=null ) {
+                                        template_12 += '<div style="float: left; height:5.36in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+
+                                    template_12 +=  '</div>';
+
+
+                                    pdfCoverContent += template_12;
+                                     
+                                }
+
+                                if(coverArray[i].template =="TEMPLATE_13" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                {
+                                    var template_13='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                     if( coverArray[i].photos[0]["photoURL"]!=null ) {
+                                        template_13 += '<div style="float: left; height:5.39in; overflow:hidden; margin:1% 1% 0 1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+
+                                    template_13 += '<div style="margin:1% 1% 0 1%; float: left; height:2.66in; width: 98%;  overflow:hidden; ">';
+
+                                     if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                            
+                                     template_13 +='<div style="float: left; height:2.66in; overflow:hidden; margin:1% 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_13 +='<div style="float: left; height:2.66in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+
+
+                                        if( coverArray[i].photos[3]["photoURL"]!=null ) {
+
+                                           
+                                            template_13 +='<div style="float: left; height:2.66in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+
+                                     template_13 +=  '</div>';
+
+                                     template_13 +=  '</div>';
+
+
+                                    pdfCoverContent += template_13;
+                                }
+
+                               if(coverArray[i].template =="TEMPLATE_14" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                {
+
+
+
+                                    var template_14='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                        template_14 +='<div style="float: left; height:5.5in; width:98%; overflow: hidden; margin: 1%  1% 0 1%;" >';
+
+                                        template_14 += '<div style="float: left; height:5.5in; overflow:hidden; margin:1% 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+
+                                         template_14 +='<div style="float: left; height:5.5n; width:29.5%; margin: 1% 0 1% 0.5%; overflow: hidden;">';
+                                        
+                                        template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+                                         template_14 +='</div>';
+
+                                        template_14 +='</div>';
+
+                                        template_14 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1% 1% 1%;">';
+                                        template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        template_14 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        
+
+                                        template_14 +=  '</div>';
+
+
+
+                                        template_14 +=  '</div>';
+                                        pdfCoverContent += template_14;
+
+
+                                }
+
+                               if( coverArray[i].template =="TEMPLATE_15" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null) ) 
+                                {
+
+                                    var template_15='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                        template_15 +='<div style="float: left; height:5.4in; width:98%; overflow: hidden; margin: 1% 1% 0 1%" >';
+
+                                        template_15 +='<div style="float: left; height:5.4n; width:30%; margin: 0; overflow: hidden;">';
+                                        
+                                        template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+                                        template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                        template_15 +='</div>';
+
+                                        template_15 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        template_15 +='</div>';
+
+                                        template_15 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1%;">';
+
+                                        template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 0 0 ; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+                                        template_15 += '<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+
+                                        template_15 +=  '</div>';
+
+                                        template_15 +=  '</div>';
+                                        pdfCoverContent += template_15;
+                                
+
+
+                                }
+                                if(coverArray[i].template =="TEMPLATE_16" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                {
+
+                                    var template_16='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    template_16 += '<div style="margin:1% 1% 1% 1%; float: left; height:2.7in; width: 98%;  overflow:hidden; ">';
+
+                                        if( coverArray[i].photos[0]["photoURL"]!=null ) {
+
+                                            
+                                            template_16 +='<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                        }
+
+                                        if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                           
+                                            template_16 +='<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                        if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                           
+                                            template_16 +='<div style="float: left; height:2.7in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                        }
+                                    template_16 +=  '</div>';
+
+                                    template_16 += '<div style="margin:0% 1% 1% 1%; float: left; height:5.4in; width: 98%;  overflow:hidden; ">';
+
+                                     if( coverArray[i].photos[3]["photoURL"]!=null ) {
+                                        template_16 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+                                     if( coverArray[i].photos[4]["photoURL"]!=null ) {
+                                        template_16 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                    }
+
+                                    template_16 +=  '</div>';
+
+                                    template_16 +=  '</div>';
+
+                                    pdfCoverContent += template_16;
+
+
+                                }
+
+                               if(coverArray[i].template =="TEMPLATE_17" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                {
+                                    var template_17='<div style="margin:0; width:100%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                    template_17 += '<div style="margin:1%; float: left; height:5.4in; width: 98%;  overflow:hidden; ">';
+
+                                    template_17 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                   
+                                    template_17+= '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                   
+
+                                    template_17 +=  '</div>';
+
+                                    template_17 += '<div style="margin:0% 1% 0 1%; float: left; height:2.7in; width: 98%;  overflow:hidden; ">';
+
+                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                    template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                   template_17 +='<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                    template_17 +=  '</div>';
+
+                                    template_17 +=  '</div>';
+
+                                    pdfCoverContent += template_17;
+
+                                }
+                                if(coverArray[i].template =="TEMPLATE_18" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null ||  coverArray[i].photos[5]["photoURL"]!=null)) 
+                                {
+                                    var template_18='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                        template_18 +='<div style="float: left; height:5.4in; width:98%; overflow: hidden; margin: 1%  1% 1% 1%;" >';
+
+                                        template_18 += '<div style="float: left; height:5.4in; overflow:hidden; margin:0 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                         template_18 +='<div style="float: left; height:5.4in; width:29.5%; margin: 0 0 1% 0.5%; overflow: hidden;">';
+                                        
+                                        template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+
+                                        template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         template_18 +='</div>';
+
+                                        template_18 +='</div>';
+
+                                        template_18 +='<div style="float: left; height:2.7in; width:98%; overflow: hidden; margin: 0 1%;">';
+
+                                        template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 0 0 ; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+                                    
+                                        template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0.5% 0 0.5%; padding: 0; width: 32.33%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+
+                                        template_18 += '<div style="float: left; height:2.7in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                         
+
+                                        template_18 +=  '</div>';
+
+                                        template_18 +=  '</div>';
+                                        pdfCoverContent += template_18;
+
+                                }
+
+
+                            }
+
+                            pdfCoverContent+="</div>";
+
+                            } 
+                            else if(measurements[0] == '8' && measurements[2] == '8"' ) {
+                                var coverconfig = {
+                                    'margin':'0',
+                                    'padding':'0',
+                                    'width':'16in',
+                                    'height':'8in',
+                                    "type": "pdf,jpg,jpeg,png"
+                                }
+
+                                console.log("coverArray");
+                                console.log(coverArray);
+                                if(coverArray.length > 0) {
+                                         
+                                        pdfCoverContent +='<div style="margin:0; padding: 0; width:100%; height:100%; display:inline-block; overflow:hidden; ">';
+                                                
+
+                                        for (var i in coverArray) 
+                                        {
+                                            console.log(coverArray[i].template);
+                                           
+                                            if(coverArray[i].template =="TEMPLATE_1"  &&  coverArray[i].photos[0]["photoURL"]!=null) {
+                                                
+
+
+                                                var template_1 ='<div style="margin:0; padding: 0; width: 48%; display:inline-block; overflow:hidden; ">';
+
+                                                template_1+='<div style="float: left;  height:5.72in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                                template_1+='</div>';
+
+                                                template_1 +='</div>';
+
+                                                pdfCoverContent += template_1;
+                                     
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_2" && ( coverArray[i].photos[0]["photoURL"]!=null || coverArray[i].photos[1]["photoURL"]!=null )) {
+
+
+                                                var template_2 ='<div style="margin:0; width:48%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+                                                if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                                    template_2+='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                                    template_2+='</div>';
+                                                    
+                                                }
+                                                if( coverArray[i].photos[1]["photoURL"]!=null) {
+                                                    template_2+='<div style="float: left;  height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                                    template_2+='</div>';
+                                                }
+
+                                                template_2+='</div>';
+                                                pdfCoverContent += template_2;
+
+                                            }
+
+                                           if(coverArray[i].template =="TEMPLATE_3" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null)){
+                                                
+                                                var template_3 ='<div style="margin:0; width:48%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+                                                if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                                    template_3+='<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 48%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+                                                    
+                                                }
+                                                if( coverArray[i].photos[1]["photoURL"]!=null) {
+                                                    template_3+='<div style="float: left;  height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 48%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"></div>'; 
+
+                                                 
+                                                }
+
+                                                template_3 += "</div>";
+
+                                                pdfCoverContent += template_3;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_4" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null)) {
+
+                                                var template_4 = '<div style="margin:0; width:48%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                if( coverArray[i].photos[0]["photoURL"]!=null ) {
+                                                    template_4 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 48%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                }
+
+                                                if( coverArray[i].photos[1]["photoURL"]==null &&  coverArray[i].photos[2]["photoURL"]==null) {
+
+                                                } else {
+
+                                                    template_4 += '<div style="margin:1%; float: left; height:5.83in; width: 48%;  overflow:hidden; ">';
+
+                                                    if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                                        
+                                                            template_4 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    }
+
+                                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_4 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+                                                    template_4 +=  '</div>'
+                                                }
+
+                                                template_4 +=  '</div>';
+
+                                                pdfCoverContent += template_4;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_5" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null)) {
+
+                                                var template_5 = '<div style="margin:0; width:48%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                if( coverArray[i].photos[1]["photoURL"]!=null || coverArray[i].photos[0]["photoURL"]!=null ) {
+                                               
+
+                                                    template_5 += '<div style="margin:1%; float: left; height:5.83in; width: 48%;  overflow:hidden; ">';
+                                                    template_5 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     template_5 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                                     template_5 +=  '</div>'; 
+                                                }
+                                                if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                            template_5 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 48%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                       
+                                                        
+                                                    }
+
+                                               
+                                                template_5 +=  '</div>';
+
+                                                pdfCoverContent += template_5;
+
+                                            }
+                                            if(coverArray[i].template =="TEMPLATE_6" &&
+                                                (  coverArray[i].photos[0]["photoURL"]!=null ||
+                                                coverArray[i].photos[1]["photoURL"]!=null ||
+                                                coverArray[i].photos[2]["photoURL"]!=null )
+                                            )
+                                            {
+                                                var template_6 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+                                                if( coverArray[i].photos[0]["photoURL"]!=null) {
+                                                    template_6+='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                                    template_6+='</div>';
+                                                    
+                                                }
+                                                template_6 += '<div style="margin:1%; float: left; height:2.86in; width: 98%;  overflow:hidden; ">';
+
+                                                    if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                                        
+                                                            template_6 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    }
+
+                                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_6 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+
+                                                template_6+='</div>';
+                                                pdfCoverContent += template_6;
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_7" &&
+                                                (  coverArray[i].photos[0]["photoURL"]!=null ||
+                                                coverArray[i].photos[1]["photoURL"]!=null ||
+                                                coverArray[i].photos[2]["photoURL"]!=null )
+                                            )
+                                            {
+                                                var template_7 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+                                               
+                                                template_7 += '<div style="margin:1%; float: left; height:2.86in; width: 98%;  overflow:hidden; ">';
+                                                template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                                template_7 +='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 49%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                template_7+='</div>';
+                                                
+                                            
+
+                                                template_7+='<div style="float: left; height:2.86in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;">'; 
+
+                                                template_7+='</div>';
+                                                
+                                                
+                                                template_7+='</div>';
+                                                pdfCoverContent += template_7;
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_9" &&
+                                                ( coverArray[i].photos[0]["photoURL"]!=null ||
+                                                coverArray[i].photos[1]["photoURL"]!=null ||
+                                                coverArray[i].photos[2]["photoURL"]!=null ||
+                                                coverArray[i].photos[3]["photoURL"]!=null )
+                                            )
+                                            {
+                                                var template_9 ='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                    template_9 += '<div style="margin:1%; float: left; height:2.89in; width: 98%;  overflow:hidden; ">';
+                                                    template_9 +='<div style="float: left; height:2.89in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                                    template_9 +='<div style="float: left; height:2.89in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    template_9+='</div>';
+
+                                                    template_9 += '<div style="margin:0 1% 1% 1%; float: left; height:2.89in; width: 98%;  overflow:hidden; ">';
+                                                    template_9 +='<div style="float: left; height:2.89in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';
+                                                    template_9 +='<div style="float: left; height:2.89in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    template_9+='</div>';
+
+
+
+                                                template_9+='</div>';
+                                                pdfCoverContent += template_9;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_10" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                            {
+                                                var template_10='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+                                                template_10 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 68%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                
+
+                                                template_10 += '<div style="margin:1%; float: left; height:5.83in; width: 28%;  overflow:hidden; ">';
+                                                        
+                                                template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                template_10 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-right:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                template_10 +=  '</div>';
+
+                                                template_10 +=  '</div>';
+
+
+                                                pdfCoverContent += template_10;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_11" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                            {
+                                                var template_11='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                
+
+                                                template_11 += '<div style="margin:1%; float: left; height:5.83in; width: 28%;  overflow:hidden; ">';
+
+                                                    if( coverArray[i].photos[0]["photoURL"]!=null ) {
+
+                                                        
+                                                            template_11 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    }
+
+                                                    if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_11 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+                                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_11 +='<div style="float: left; height:1.943in; overflow:hidden; margin:1%; margin-left:0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+                                                    template_11 +=  '</div>';
+
+                                                 if( coverArray[i].photos[3]["photoURL"]!=null ) {
+                                                    template_11 += '<div style="float: left; height:5.83in; overflow:hidden; margin:1%; padding: 0; width: 68%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                }
+
+                                                template_11 +=  '</div>';
+
+
+                                                pdfCoverContent += template_11;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_12" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                            {
+                                                var template_12='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                template_12 += '<div style="margin:1% 1% 0 1%; float: left; height:1.77in; width: 98%;  overflow:hidden; ">';
+
+                                                    if( coverArray[i].photos[0]["photoURL"]!=null ) {
+
+                                                        
+                                                        template_12 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    }
+
+                                                    if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_12 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+                                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_12 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+                                                template_12 +=  '</div>';
+
+                                                 if( coverArray[i].photos[3]["photoURL"]!=null ) {
+                                                    template_12 += '<div style="float: left; height:4.13in; overflow:hidden; margin:1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                }
+
+                                                template_12 +=  '</div>';
+
+
+                                                pdfCoverContent += template_12;
+                                                 
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_13" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null))
+                                            {
+                                                var template_13='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                 if( coverArray[i].photos[0]["photoURL"]!=null ) {
+                                                    template_13 += '<div style="float: left; height:4in; overflow:hidden; margin:1% 1% 0 1%; padding: 0; width: 98%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                }
+
+                                                template_13 += '<div style="margin:1% 1% 0 1%; float: left; height:1.77in; width: 98%;  overflow:hidden; ">';
+
+                                                 if( coverArray[i].photos[1]["photoURL"]!=null ) {
+
+                                                        
+                                                 template_13 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    }
+
+                                                    if( coverArray[i].photos[2]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_13 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+
+
+                                                    if( coverArray[i].photos[3]["photoURL"]!=null ) {
+
+                                                       
+                                                        template_13 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                    }
+
+                                                 template_13 +=  '</div>';
+
+                                                 template_13 +=  '</div>';
+
+
+                                                pdfCoverContent += template_13;
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_14" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                            {
+
+
+                                                var template_14='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                    template_14 +='<div style="float: left; height:4.1in; width:98%; overflow: hidden; margin: 1%  1% 0 1%;" >';
+                                                    
+                                                    template_14 += '<div style="float: left; height:4in; overflow:hidden; margin:1% 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+                                                    template_14 +='<div style="float: left; height:4in; width:29.5%; margin: 1% 0 1% 0.5%; overflow: hidden;">';
+                                                    template_14 += '<div style="float: left; height:2in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+                                                    template_14 += '<div style="float: left; height:2in; overflow:hidden; margin:1% 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+                                                    template_14 +='</div>';
+
+                                                    template_14 +='</div>';
+
+                                                    template_14 +='<div style="float: left; height:1.87in; width:98%; overflow: hidden; margin: 0 1%;">';
+
+                                                    template_14 += '<div style="float: left; height:1.87in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+
+                                                
+                                                    
+                                                    template_14 += '<div style="float: left; height:1.87in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+
+                                                    template_14 +=  '</div>';
+
+
+
+                                                    template_14 +=  '</div>';
+                                                    pdfCoverContent += template_14;
+
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_15" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null) ) 
+                                            {
+
+                                                var template_15='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                    template_15 +='<div style="float: left; height:4in; width:98%; overflow: hidden; margin: 1% 1% 0 1%" >';
+
+                                                    template_15 +='<div style="float: left; height:4in; width:30%; margin: 0; overflow: hidden;">';
+                                           
+                                                    
+                                                    template_15 += '<div style="float: left; height:2in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+                                                    template_15 += '<div style="float: left; height:2in; overflow:hidden; margin:1% 0.5% 0 0; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+                                                     template_15 +='</div>';
+
+                                                    
+                                                    template_15 += '<div style="float: left; height:4in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     
+
+                                                    template_15 +='</div>';
+
+                                                    template_15 +='<div style="float: left; height:1.87in; width:98%; overflow: hidden; margin: 0 1%;">';
+
+                                                    
+                                                    template_15 += '<div style="float: left; height:1.87in; overflow:hidden; margin:1% 0.5% 0 0 ; padding: 0; width: 29.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                   
+                                                    template_15 += '<div style="float: left; height:1.87in; overflow:hidden; margin:1% 0 0 0.5%; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                    
+
+
+                                                    template_15 +=  '</div>';
+
+                                                    template_15 +=  '</div>';
+                                                    pdfCoverContent += template_15;
+                                            
+
+
+                                            }
+                                            if(coverArray[i].template =="TEMPLATE_16" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                            {
+
+                                                var template_16='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                template_16 += '<div style="margin:1% 1% 1% 1%; float: left; height:1.77in; width: 98%;  overflow:hidden; ">';
+                                                template_16 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                template_16 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                template_16 +='<div style="float: left; height:1.77in; overflow:hidden; margin:1% 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                template_16 +=  '</div>';
+                                                template_16 += '<div style="margin:0% 1% 0 1%; float: left; height:4.1in; width: 98%;  overflow:hidden; ">';
+                                                template_16 += '<div style="float: left; height:4.1in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                           
+                                                template_16 += '<div style="float: left; height:4.1in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                template_16 +=  '</div>';
+                                                template_16 +=  '</div>';
+
+                                                pdfCoverContent += template_16;
+
+                                            }
+
+                                            if(coverArray[i].template =="TEMPLATE_17" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null)) 
+                                            {
+                                                var template_17='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                template_17 += '<div style="margin:1%; float: left; height:4.1in; width: 98%;  overflow:hidden; ">';
+                                            
+                                                template_17 += '<div style="float: left; height:4.1in; overflow:hidden; margin:0 0.5% 0 0; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                            
+                                                template_17+= '<div style="float: left; height:4.1in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 49.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                              
+                                                template_17 +=  '</div>';
+
+                                                template_17 += '<div style="margin:0% 1% 0 1%; float: left; height:1.77in; width: 98%;  overflow:hidden; ">';
+              
+                                                template_17 +='<div style="float: left; height:1.77in; overflow:hidden; margin:0 0.5% 1% 0; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+          
+                                                template_17 +='<div style="float: left; height:1.77in; overflow:hidden; margin:0 0.5% 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                template_17 +='<div style="float: left; height:1.77in; overflow:hidden; margin:0 0 1% 0.5%; padding: 0; width: 32.65%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                        
+                                                template_17 +=  '</div>';
+
+                                                template_17 +=  '</div>';
+
+                                                pdfCoverContent += template_17;
+
+                                            }
+                                            if(coverArray[i].template =="TEMPLATE_18" && ( coverArray[i].photos[0]["photoURL"]!=null ||  coverArray[i].photos[1]["photoURL"]!=null ||  coverArray[i].photos[2]["photoURL"]!=null ||  coverArray[i].photos[3]["photoURL"]!=null ||  coverArray[i].photos[4]["photoURL"]!=null ||  coverArray[i].photos[5]["photoURL"]!=null)) 
+                                            {
+                                                var template_18='<div style="margin:0; width:50%; height:100%; padding: 0;  display:inline-block; overflow:hidden;">';
+
+                                                    template_18 +='<div style="float: left; height:4in; width:98%; overflow: hidden; margin: 1%  1% 1% 1%;" >';
+
+                                                    template_18 += '<div style="float: left; height:4in; overflow:hidden; margin:0 0.5% 0.5% 0; padding: 0; width: 69.5%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+
+                                                   
+                                                     template_18 +='<div style="float: left; height:4in; width:29.5%; margin: 0 0 1% 0.5%; overflow: hidden;">';
+                                                   
+                                                    template_18 += '<div style="float: left; height:2in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[1]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                   
+                                                 
+                                                    template_18 += '<div style="float: left; height:2in; overflow:hidden; margin:0 0 1%; padding: 0; width: 99%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[2]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+                                                     template_18 +='</div>';
+
+                                                    template_18 +='</div>';
+
+                                                    template_18 +='<div style="float: left; height:1.77in; width:98%; overflow: hidden; margin: 0 1%;">';
+
+                                                    template_18 += '<div style="float: left; height:1.77in; overflow:hidden; margin:0 0.5% 0 0 ; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[3]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+
+                                                    template_18 += '<div style="float: left; height:1.77in; overflow:hidden; margin:0 0.5% 0 0.5%; padding: 0; width: 32.33%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[4]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>';                                              
+
+
+                                                    template_18 += '<div style="float: left; height:1.77in; overflow:hidden; margin:0 0 0 0.5%; padding: 0; width: 32.8%; box-sizing:border-box;  background-image: url('+coverArray[i].photos[0]["photoURL"]+');background-size: cover;background-position: center center; background-repeat: no-repeat;"> </div>'; 
+         
+
+                                                    template_18 +=  '</div>';
+
+                                                    template_18 +=  '</div>';
+                                                    pdfCoverContent += template_18;
+
+                                            }
+                                            
+                                        }
+                                        pdfCoverContent +="</div>";
+                                }
+
+
+                            }
+                        } //Ends else if here..
 
 
                         }
 
                         var footer ='</body></html>';
                         pdfContent = pdfContent+footer;
+                        pdfCoverContent = pdfCoverContent+footer;
 
 
                         var pdffilename = 'order_'+Date.now()+'_'+journalId+'.pdf';
+                        var pdfCoverfilename = 'order_'+Date.now()+'_cover_'+journalId+'.pdf';
                         console.log('pdffilename'+ pdffilename);
          
                         var dirPath = './public/';
                         var htmlfilename = 'order_'+Date.now()+'.html';
+                        var htmlcoverfilename = 'order_cover_'+Date.now()+'.html';
 
 
                         var inspect = require('util').inspect;
                       
-                        fs.writeFile( dirPath + htmlfilename , pdfContent, function (err_writing_html_file, success_writing_xml_file) 
-                        {
+                        fs.writeFile( dirPath + htmlfilename , pdfContent, function (err_writing_html_file, success_writing_xml_file) {
+                            fs.writeFile( dirPath + htmlcoverfilename , pdfCoverContent, function (err_writing_html_file, success_writing_xml_file) {
 
-                        var html = fs.readFileSync(dirPath + htmlfilename , 'utf8');
-                       
-      
-                        var pdf = require('html-pdf');
-                    
-                        setTimeout(function(){ 
-                                 
-                                pdf.create(html, config).toFile(dirPath+pdffilename, function (error, success) {
-                                        if (error) {
-                                            console.log('Oh noes! Errorz!');
-                                            console.log(error);
-                                        } else {
-                                            console.log(success.filename);
-                                            res.success({
-                                                'xml_path': '/public/'+ filename,
-                                                'pdf_path': dirPath+ pdffilename,
-                                                'html_path': dirPath+ htmlfilename,
-                                                'message':'Xml has been generated Successfully'
+                                var html = fs.readFileSync(dirPath + htmlfilename , 'utf8');
+                                var coverhtml = fs.readFileSync(dirPath + htmlcoverfilename , 'utf8');
+                               
+              
+                                var pdf = require('html-pdf');
+                            
+                                setTimeout(function(){ 
+                                         
+                                        pdf.create(html, config).toFile(dirPath+pdffilename, function (error, success) {
+                                            pdf.create(coverhtml, coverconfig).toFile(dirPath+pdfCoverfilename, function (errorCoverPdf, successoverPdf) {
+                                                
+
+
+                                                if (errorCoverPdf) {
+                                                    console.log('Oh noes! Errorz!');
+                                                    console.log(error);
+                                                } else {
+                                                   
+                                                    res.success({
+                                                        'xml_path': '/public/'+ filename,
+                                                        'pdf_path': dirPath+ pdffilename,
+                                                        'cover_pdf_path': dirPath+ pdfCoverfilename,
+                                                        'html_path': dirPath+ htmlfilename,
+                                                        'message':'Xml has been generated Successfully'
+                                                    });
+
+                                                }
                                             });
+                                        });
+                                    }, 3000);
 
-                                        }
-                                    });
-                            }, 3000);
+                               
+                                });
+                            });
 
-                       
                         });
-
-                    });
             } else {
                 console.log("Journal ID: " + journalId + " was not found");
                 promise.resolve(null);
